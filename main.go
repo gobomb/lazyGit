@@ -66,18 +66,8 @@ func ExampleNewWatcher(path string) {
 				}
 				log.Printf("git add %d ok!", i)
 
-				commit := fmt.Sprintf("-m commit the %d time at %s", i, time.Now().String())
-				log.Println(commit)
-				cmd = exec.Command("git", "commit", commit)
-				cmd.Dir = path
-				err = cmd.Run()
-				if err != nil {
-					log.Println("git commit", err)
-				}
-				log.Printf("git commit %d ok!", i)
-
 				np.Lock()
-				np.i=i
+				np.i = i
 				np.is = true
 				np.Unlock()
 
@@ -99,7 +89,17 @@ func ExampleNewWatcher(path string) {
 			np.Unlock()
 			return
 		} else {
-			cmd := exec.Command("git", "push")
+
+			commit := fmt.Sprintf("-m commit %d time at %s", i, time.Now().Format(time.Stamp))
+			cmd := exec.Command("git", "commit", commit)
+			cmd.Dir = path
+			err = cmd.Run()
+			if err != nil {
+				log.Println("git commit", err)
+			}
+			log.Printf("git commit %d ok!", np.i)
+
+			cmd = exec.Command("git", "push")
 			cmd.Dir = path
 			err = cmd.Run()
 			if err != nil {
