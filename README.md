@@ -2,7 +2,7 @@
 # [Supported]
 
  - [x] windows 64 bits
- - [] linux
+ - [ ] linux
 
 # [Usage]
 
