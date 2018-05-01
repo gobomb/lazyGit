@@ -1,7 +1,7 @@
 
 # [Supported]
 
- - [x] windows 64 bits
+ - [x] windows 
  - [ ] linux
 
 # [Usage]
