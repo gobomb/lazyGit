@@ -23,12 +23,8 @@ Flags:
 
 # [Tips]
 
-the best way: the filepath should not be the git repo.
+The best way: the filepath should be the git repo.
 
-For example:
- 
- `/the/path/to/a`: this is the git repo, should not watch tish filepath
-
- `/the/path/to/a/b`: should watch this filepath
+And the .git directory will be ignored.
 
 
