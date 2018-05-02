@@ -24,7 +24,7 @@ Flags:
 
 # [Tips]
 
-The best way: the filepath should be the git repo.
+The filepath should be the git repository.
 
 And the .git directory will be ignored.
 
