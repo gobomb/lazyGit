@@ -2,7 +2,8 @@
 # [Supported]
 
  - [x] windows 
- - [ ] linux
+ - [x] macos 
+ - [x] linux
 
 # [Usage]
 
