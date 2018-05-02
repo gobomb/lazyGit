@@ -2,10 +2,13 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"lazyGit/config"
 	"log"
 	"fmt"
 	"os"
 )
+
+var flags config.Flags
 
 var rootCmd = &cobra.Command{
 	Use:   "cronPush",
@@ -13,13 +16,13 @@ var rootCmd = &cobra.Command{
 	Long:  "1.cronPush will watch the filepath\n2.if the filepath has some change, auto run the git command 'git add . && git commit && git push'\n\ninput the path you want to watch as the flag",
 	//Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Printf("the path you input: %s", path)
+		log.Printf("the path you input: %s", flags.Path)
 
-		if path == "" {
+		if flags.Path == "" {
 			log.Println("you should input the -p flag. or you can watch the help menu -h")
 			return
 		}
-		thisFunc(path)
+		thisFunc(flags)
 	},
 }
 
@@ -33,9 +36,9 @@ var rootCmd = &cobra.Command{
 //	},
 //}
 
-var thisFunc func(string)
+var thisFunc func(config.Flags)
 
-func Execute(watcher func(string)) {
+func Execute(watcher func(config.Flags)) {
 	thisFunc = watcher
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -44,12 +47,9 @@ func Execute(watcher func(string)) {
 
 }
 
-var cycle int
-var path string
-
 func init() {
-	rootCmd.PersistentFlags().IntVarP(&cycle, "pushCycle", "c", 5, "git push once time each %n seconds; the default is 5s")
-	rootCmd.PersistentFlags().StringVarP(&path, "path", "p", "", "input the path you want to watch as the flag")
+	rootCmd.PersistentFlags().IntVarP(&flags.Cycle, "pushCycle", "c", 5, "git push once time each %n seconds; the default is 5s")
+	rootCmd.PersistentFlags().StringVarP(&flags.Path, "path", "p", "", "input the path you want to watch as the flag")
 	//rootCmd.AddCommand(cycleCmd)
 
 }

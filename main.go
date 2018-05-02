@@ -12,6 +12,7 @@ import (
 	"strings"
 	"sync"
 	"regexp"
+	"lazyGit/config"
 )
 
 var PATH string
@@ -36,7 +37,7 @@ func GetCurrentDirectory() string {
 	return strings.Replace(dir, "\\", "/", -1) //将\替换成/
 }
 
-func ExampleNewWatcher(path string) {
+func ExampleNewWatcher(flags config.Flags) {
 	np := needPush{
 		is: false,
 		i:  0,
@@ -64,7 +65,7 @@ func ExampleNewWatcher(path string) {
 				}
 
 				cmd := exec.Command("git", "add", ".")
-				cmd.Dir = path
+				cmd.Dir = flags.Path
 				err = cmd.Run()
 				if err != nil {
 					log.Println("git add:", err)
@@ -83,7 +84,7 @@ func ExampleNewWatcher(path string) {
 		}
 	}()
 
-	err = watcher.Add(path)
+	err = watcher.Add(flags.Path)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -97,7 +98,7 @@ func ExampleNewWatcher(path string) {
 
 			commit := fmt.Sprintf("-m commit %d time at %s", i, time.Now().Format(time.Stamp))
 			cmd := exec.Command("git", "commit", commit)
-			cmd.Dir = path
+			cmd.Dir = flags.Path
 			err = cmd.Run()
 			if err != nil {
 				log.Println("git commit", err)
@@ -105,7 +106,7 @@ func ExampleNewWatcher(path string) {
 			log.Printf("git commit %d ok!", np.i)
 
 			cmd = exec.Command("git", "push")
-			cmd.Dir = path
+			cmd.Dir = flags.Path
 			err = cmd.Run()
 			if err != nil {
 				log.Println("git push", err)
@@ -115,7 +116,8 @@ func ExampleNewWatcher(path string) {
 		}
 		np.Unlock()
 	}
-	ticker := time.NewTicker(5 * time.Second)
+	c := time.Duration(flags.Cycle)
+	ticker := time.NewTicker(c * time.Second)
 	for {
 		select {
 		case <-ticker.C:
