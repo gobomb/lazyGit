@@ -11,6 +11,7 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"regexp"
 )
 
 var PATH string
@@ -25,7 +26,6 @@ type needPush struct {
 // env GOOS=windows GOARCH=amd64 go build
 func main() {
 	cmd.Execute(ExampleNewWatcher)
-
 }
 
 func GetCurrentDirectory() string {
@@ -54,6 +54,11 @@ func ExampleNewWatcher(path string) {
 			select {
 			case event := <-watcher.Events:
 				log.Println("event:", event)
+
+				if regexp.MustCompile(`.git`).MatchString(event.Name) == true {
+					continue
+				}
+
 				if event.Op&fsnotify.Write == fsnotify.Write {
 					log.Println("modified file:", event.Name)
 				}
