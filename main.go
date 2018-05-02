@@ -55,7 +55,7 @@ func ExampleNewWatcher(path string) {
 			case event := <-watcher.Events:
 				log.Println("event:", event)
 
-				if regexp.MustCompile(`.git`).MatchString(event.Name) == true {
+				if regexp.MustCompile(`\.git$`).MatchString(event.Name) == true {
 					continue
 				}
 
